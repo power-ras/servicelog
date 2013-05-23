@@ -1,0 +1,67 @@
+.\"
+.\" Copyright (C) 2005, 2012, 2013 International Business Machines
+.\" Michael Strosaker <strosake@us.ibm.com>
+.\"
+.TH LOG_REPAIR_ACTION 8 "February 2012" Linux "PowerLinux Diagnostic Tools"
+.SH NAME
+log_repair_action - create a log entry to indicate that a device was repaired
+.SH SYNOPSIS
+.B /usr/sbin/log_repair_action
+.B \-l
+.I location-code
+.RB [ \-p
+.IR procedure ]
+.RB [ \-d
+.IR date ]
+.RB [ \-n
+.IR note-string ]
+.RB [ \-q ]
+.br
+.B /usr/sbin/log_repair_action
+.B \-V
+.br
+.B /usr/sbin/log_repair_action
+.B \-h
+.SH DESCRIPTION
+The \fIlog_repair_action\fR command creates an entry in the servicelog
+database to 
+indicate that the device at the specified location code has been repaired.
+All events with the specified
+location code and procedure in their callouts will be marked
+closed (fixed).
+.SH OPTIONS
+.TP
+\fB\-l \fIlocation-code \fR or \fB\-\-location="\fIlocation-code\fB"
+Specify the location code of the device that was repaired.
+.TP
+\fB\-p \fIprocedure \fR or \fB\-\-procedure="\fIprocedure\fB"
+Specify the repair procedure that was followed.
+.TP
+\fB\-d \fIdate \fRor \fB\-\-date="\fIdate\fB"
+Specify the date and time when the device was repaired.
+The date format can be anything recognized by the
+.B \-d
+option of the
+.IR date (1)
+command.
+If not specified,
+defaults to the current date/time.
+.TP
+\fB\-n \fInote-string \fRor \fB\-\-note="\fInote-string\fB"
+Log the specified textual note as part of the repair action.
+.TP
+\fB\-q \fRor \fB\-\-quiet
+Do not prompt for confirmation or print error messages.
+.TP
+.B \-h \fRor \fB\-\-help
+Print a help message and exit.
+.TP
+.B \-V \fRor \fB\-\-version
+Display the version of the command and exit.
+.P
+To list the repair actions in the database,
+use "servicelog \-\-repair_action=yes".
+.SH AUTHOR
+Written by Michael Strosaker (strosake@austin.ibm.com)
+.SH "SEE ALSO"
+.BR servicelog (8)

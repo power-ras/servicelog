@@ -1,0 +1,140 @@
+.\"
+.\" Copyright (C) 2008, 2012, 2013 IBM
+.\"
+.TH SERVICELOG 8 "February 2012" Linux "PowerLinux Diagnostic Tools"
+.SH NAME
+servicelog - query the contents of the servicelog
+.SH SYNOPSIS
+.nf
+\fB/usr/bin/servicelog \fR[\fIoptions\fR]
+.fi
+.SH DESCRIPTION
+The \fIservicelog\fR command queries and displays the contents of the
+system servicelog.
+You can use the
+.B \-\-query
+option to select which events to report.
+.SH OPTIONS
+When run without any command-line arguments, \fIservicelog\fR will report
+statistics on the types of entries that have been logged to the database.
+.TP
+\fB\-\-dump\fR or \fB\-d
+Report every event currently logged to the database.
+.TP
+\fB\-\-query=\fB"\fIquery-string\fB"\fR or \fB\-q "\fIquery-string\fB"
+Specify the type of events to report.  See the "QUERY STRINGS" section.
+.TP
+\fB\-\-help\fR or \fB\-h
+Display a help message and exit.
+.TP
+\fB\-\-version\fR or \fB\-V
+Display the version of the command and exit.
+.SH QUERY STRINGS
+Servicelog events are stored in a relational database.
+When you specify
+.BR \-\-query ,
+.I query-string
+is used in an SQL WHERE clause to select the events to report.
+Here are the column names you can use in query strings.
+.TP
+id
+record ID
+.TP
+time_logged, time_event, time_last_update
+e.g., '2008-02-08 14:30:05'
+.TP
+type
+an integer, or one of the following names: $BASIC (same as 0), $OS (1),
+$RTAS (2), $ENCLOSURE (3), $BMC (4)
+.TP
+severity
+an integer, or one of thew following names:
+$FATAL (7), $ERROR (6), $ERROR_LOCAL (5), $WARNING (4), $EVENT (3),
+$INFO (2), $DEBUG (1)
+.TP
+platform
+processor type (text)
+.TP
+machine_serial
+serial number (text)
+.TP
+machine_model
+model number (text)
+.TP
+nodename
+name of system reporting the event (text)
+.TP
+refcode
+reference code (text)
+.TP
+description
+(text)
+.TP
+serviceable
+0 or 1
+.TP
+predictive
+0 or 1
+.TP
+disposition
+0 (Recoverable), 1 (Unrecoverable), or 2 (Unrecoverable, Bypassed)
+.TP
+call_home_status
+0 (None Needed), 1 (Call Home Candidate), or 2 (Called Home)
+.TP
+closed
+0 or 1
+.TP
+repair
+numeric ID of repair action that close this event, or 0 if not closed
+.\" .P
+.\" The following column names can be used to select events with callouts:
+.\" priority, procedure, location, fru, serial, and ccin (all text).
+.P
+The following column names can used to select OS-type events:
+os.version, subsystem, driver, and device (all text).
+.P
+The following column names can be used to select RTAS-type events:
+creator_id (text);
+action_flags, platform_id, subsystem_id, pel_severity, rtas.event_type,
+event_subtype, kernel_id, and addl_word1 through addl_word8 (all integers).
+.P
+The following column names can be used to select ENCLOSURE-type events:
+enclosure_serial, enclosure_model (both text).
+.P
+The following column names can be used to select BMC-type events:
+sel_id, sel_type, generator, bmc.version, sensor_type, sensor_number,
+event_class, bmc.event_type, and direction (all integers).
+.SH EXAMPLES
+.TP
+servicelog \-\-query='id=12'
+prints the event with an ID of 12.
+.TP
+servicelog \-\-query='serviceable=1 AND closed=0'
+prints all open (unfixed) serviceable events.
+.TP
+servicelog \-q 'severity>=$WARNING AND closed=0'
+prints all open events with a sev of WARNING or greater.
+.TP
+servicelog \-q "time_event>'2008-02-08'"
+prints all events that occurred after Feb 8, 2008.
+.SH OLD SYNTAX
+This man page describes the command syntax accepted by v1.0
+and later of
+.BR servicelog .
+In v1.1, backward compatibility with v0.2.9 was added.
+If
+.B servicelog
+recognizes v0.2.9 command-line options, it will exec the v0.2.9
+version of the command.
+.SH AUTHOR
+Written by 
+Michael Strosaker (strosake@austin.ibm.com),
+Nathan Fontenot (nfont@austin.ibm.com),
+Jim Keniston (jkenisto@us.ibm.com),
+Brad Peters
+
+.SH "SEE ALSO"
+.BR servicelog_manage (8)
+.BR servicelog_notify (8)
+.BR log_repair_action (8)

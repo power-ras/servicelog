@@ -1,0 +1,9 @@
+servicelog
+
+Installation (briefly, For more detailed instructions please see ./INSTALL):
+	# ./configure
+	# make
+	# make install
+
+Compilation Dependencies:
+	libservicelog-devel

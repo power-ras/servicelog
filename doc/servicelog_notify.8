@@ -1,0 +1,137 @@
+.\"
+.\" Copyright (C) 2006, 2012, 2013 International Business Machines
+.\"
+.TH SERVICELOG_NOTIFY 8 "February 2012" Linux "PowerLinux Diagnostic Tools"
+.SH NAME
+servicelog_notify - add, view, or remove tools to be notified when
+events are logged in servicelog
+.SH SYNOPSIS
+.nf
+\fB/usr/sbin/servicelog_notify --add \fR[\fIadd_options\fR]
+\fB/usr/sbin/servicelog_notify --remove \fR {\fB--id\fR=\fIn\fR | \fB--command\fR=\fIcmd\fR}
+\fB/usr/sbin/servicelog_notify --list\fR [\fB--id\fR=\fIn\fR | \fB--command\fR=\fIcmd\fR\]
+.fi
+.SH DESCRIPTION
+The \fIservicelog_notify\fR command allows the registration of tools which
+will be invoked whenever events matching the specified parameters are logged
+in the servicelog.  This command also allows registered notification tools
+to be listed or removed.
+.SH OPTIONS
+.TP
+\fB\-l\fR or \fB\-\-list\fR
+Lists registered notification tools.
+By default, lists them all.
+If
+.B \-\-id
+is specified, only the notification with that ID is listed.
+If
+.B \-\-command
+is specified, all notifications that execute that command are listed.
+.TP
+\fB\-r\fR or \fB\-\-remove\fR
+Removes the notification with ID=\fIn\fR, if
+.B \-\-id
+was specified, or all notifications that run the command specified by
+.BR \-\-command .
+.TP
+\fB\-c \fIcmd\fR or \fB\-\-command=\fIcmd\fR
+The command (including command-line options) to be invoked when a matching
+event is logged.
+.TP
+\fB\-i \fIn\fR or \fB\-\-id=\fIn\fR
+The ID number of the notification tool to be listed or removed.
+.TP
+\fB\-a\fR or \fB\-\-add\fR
+Creates a new notification, specified by the
+.BR \-\-match ,
+.BR \-\-type ,
+.BR \-\-command ,
+and
+.B \-\-method
+options.
+.TP
+\fB\-m \fIquery_string\fB or \fB\-\-match=\fIquery_string\fR
+A filter string used to determine whether a newly-logged event should cause
+this notification tool to be invoked (for example, --match='serviceable=1'
+to match only serviceable events).
+See the "QUERY STRINGS" section in the
+.IR servicelog (8)
+man page for more information.
+.TP
+\fB\-\-type=EVENT \fRor \fB\-\-type=REPAIR\fR or \fB\-\-type=EVENT|REPAIR\fR
+Specifies whether to notify of events or repair actions or both.
+.B  \-t
+is a synonym for
+.BR \--type .
+.TP
+\fB\-\-method=\fR{\fBnum_stdin\fR|\fBnum_arg\fR|\fBtext_stdin\fR|\fBpairs_stdin\fR}
+Indicates how data should be passed to the notification tool.
+\fBnum_stdin\fR indicates that the ID of the new event will be passed to stdin.
+\fBnum_arg\fR indicates that the ID will be passed as the last command-line argument.
+\fBtext_stdin\fR indicates that verbose descriptive text will be passed to stdin.
+\fBpairs_stdin\fR indicates that data from the new event will be passed
+to stdin as parameter=value pairs, one per line.
+.B \-M
+is a synonym for
+.BR \-\-method .
+.TP
+\fB\-h\fR or \fB\-\-help\fR
+Display a help message and exit.
+.SH OLD SYNTAX
+The above describes the command syntax accepted by v1.0
+and later versions of
+.BR servicelog_notify .
+In v1.1, support for the following options was added
+for backward compatibility with v0.2.9.
+However, mixing v0.2.9 options with v1.x options may produce
+unexpected results.
+.TP
+\fB\-\-severity=\fIsev\fR
+.I sev
+is a number from 1 to 7.
+Equivalent to a \fBseverity>=\fIsev\fR clause in a
+.B \-\-match
+query-string.
+.TP
+\fB\-\-serviceable=\fR{\fByes\fR|\fBno\fR|\fBall\fR}
+Equivalent to a
+.B serviceable
+clause in a
+.B \-\-match
+query-string (yes=1, no=0).
+.TP
+\fB\-\-type=\fIevent_type\fR[|\fIevent_type\fR...]
+Equivalent to one or more
+.B type
+clauses in a
+.B \-\-match
+query-string.
+Recognized
+.I event_types
+are: os (same as $OS in a query-string), ppc64_rtas ($RTAS),
+ppc64_encl ($ENCLOSURE), and ppc64_bmc ($BMC).
+.TP
+\fB\-\-repair_action=\fR{\fByes\fR|\fBno\fR|\fBall\fR}
+Equivalent to
+.BR \-\-type=REPAIR ,
+.BR \-\-type=EVENT ,
+or
+.BR \-\-type=EVENT|REPAIR ,
+respectively.
+.TP
+\fB\-\-query\fR
+Same as
+.BR \-\-list ,
+except that you must specify
+.B \-\-id
+or
+.BR \-\-command .
+.SH AUTHOR
+Written by Michael Strosaker (strosake@austin.ibm.com)
+and Nathan Fontenot (nfont@austin.ibm.com).
+v0.2.9 compatibility added by
+Brad Peters and
+Jim Keniston (jkenisto@us.ibm.com).
+.SH "SEE ALSO"
+.BR servicelog (8),
+.BR log_repair_action (8)
