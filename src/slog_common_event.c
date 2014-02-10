@@ -27,6 +27,7 @@
 #include <getopt.h>
 #include <servicelog-1/servicelog.h>
 #include "config.h"
+#include "platform.h"
 
 static struct option long_options[] = {
 	{"event",       required_argument, NULL, 'e'},
@@ -77,6 +78,16 @@ main(int argc, char **argv) {
 	servicelog *slog;
 	struct sl_event event;
 	uint64_t event_id;
+	int platform = 0;
+
+	platform = get_platform();
+	switch (platform) {
+	case PLATFORM_UNKNOWN:
+	case PLATFORM_POWERKVM:
+		fprintf(stderr, "%s is not supported on the %s platform\n",
+				argv[0], __power_platform_name(platform));
+		exit(1);
+	}
 
 	for (;;) {
 		option_index = 0;
