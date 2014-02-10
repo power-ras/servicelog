@@ -32,6 +32,7 @@
 #include <errno.h>
 #include <limits.h>
 #include "config.h"
+#include "platform.h"
 
 static struct option long_options[] = {
 /* v0.2.9 options: */
@@ -153,8 +154,19 @@ main(int argc, char **argv)
 {
 	int v29_opts = 0, v1_opts = 0;
 	int option_index, rc;
+	int platform = 0;
 
 	cmd = argv[0];
+
+	platform = get_platform();
+	switch (platform) {
+	case PLATFORM_UNKNOWN:
+	case PLATFORM_POWERKVM:
+		fprintf(stderr, "%s: is not supported on the %s platform\n",
+					cmd, __power_platform_name(platform));
+		exit(1);
+	}
+
 	set_up_commands();
 
 	for (;;) {
