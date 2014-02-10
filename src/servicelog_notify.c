@@ -29,6 +29,7 @@
 #include <sys/stat.h>
 #include <servicelog-1/servicelog.h>
 #include "config.h"
+#include "platform.h"
 
 #define ACTION_TOOMANY		-1
 #define ACTION_UNSPECIFIED	0
@@ -185,9 +186,19 @@ main(int argc, char *argv[])
 	struct stat sbuf;
 	char *tSev = NULL;
 	int tRepAct = 0;
+	int platform = 0;
 	char *connector = "";
 
 	cmd = argv[0];
+
+	platform = get_platform();
+	switch (platform) {
+	case PLATFORM_UNKNOWN:
+	case PLATFORM_POWERKVM:
+		fprintf(stderr, "%s: is not supported on the %s platform\n",
+					cmd, __power_platform_name(platform));
+		exit(1);
+	}
 
 	if (argc <= 1) {
 		print_usage();
