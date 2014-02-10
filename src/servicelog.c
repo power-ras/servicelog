@@ -27,6 +27,7 @@
 #include <getopt.h>
 #include <servicelog-1/servicelog.h>
 #include "config.h"
+#include "platform.h"
 
 static char *cmd;
 
@@ -102,11 +103,21 @@ main(int argc, char *argv[])
 {
 	int option_index, rc;
 	int dump = 0;
+	int platform = 0;
 	char *query = NULL;
 	servicelog *slog;
 	struct sl_event *event;
 
 	cmd = argv[0];
+
+	platform = get_platform();
+	switch (platform) {
+	case PLATFORM_UNKNOWN:
+	case PLATFORM_POWERKVM:
+		fprintf(stderr, "%s: is not supported on the %s platform\n",
+					cmd, __power_platform_name(platform));
+		exit(1);
+	}
 
 	for (;;) {
 		option_index = 0;
