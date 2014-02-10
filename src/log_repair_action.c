@@ -28,6 +28,7 @@
 #include <unistd.h>
 #include <servicelog-1/servicelog.h>
 #include "config.h"
+#include "platform.h"
 
 #define BUF_SIZE	512
 #define ARG_LIST	"l:p:d:n:t:qvVh"
@@ -95,6 +96,16 @@ main(int argc, char *argv[])
 	struct sl_event *events = NULL;
 	time_t epoch;
 	int api_version = 0;  // Short for version 0.2.9
+	int platform = 0;
+
+	platform = get_platform();
+	switch (platform) {
+	case PLATFORM_UNKNOWN:
+	case PLATFORM_POWERKVM:
+		fprintf(stderr, "%s is not supported on the %s platform\n",
+					argv[0], __power_platform_name(platform));
+		exit(1);
+	}
 
 	memset(ra, 0, sizeof(*ra));
 
