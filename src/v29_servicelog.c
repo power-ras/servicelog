@@ -15,6 +15,7 @@
 #include <getopt.h>
 #include <servicelog-1/libservicelog.h>
 #include "config.h"
+#include "platform.h"
 
 #define ARG_LIST	"i:t:s:e:E:S:R:r:l:hvV"
 
@@ -150,6 +151,7 @@ main(int argc, char *argv[])
 {
 	int option_index, rc;
 	int verbose = 0;
+	int platform = 0;
 	uint32_t id = 0;
 	int other_flag = 0;
 	size_t sz;
@@ -159,6 +161,15 @@ main(int argc, char *argv[])
 	struct sl_query query;
 
 	cmd = argv[0];
+
+	platform = get_platform();
+	switch (platform) {
+	case PLATFORM_UNKNOWN:
+	case PLATFORM_POWERKVM:
+		fprintf(stderr, "%s: is not supported on the %s platform\n",
+					cmd, __power_platform_name(platform));
+		exit(1);
+	}
 
 	if (argc <= 1) {
 		print_usage();
