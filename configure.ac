@@ -17,7 +17,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT([servicelog],[1.1.11],[hegdevasant@in.ibm.com])
+AC_INIT([servicelog],[1.1.12],[hegdevasant@in.ibm.com, arunabal@in.ibm.com])
 AC_CONFIG_SRCDIR([src/servicelog.c])
 AC_CONFIG_SRCDIR([doc/servicelog.8])
 AC_CONFIG_HEADER([src/config.h])
@@ -26,7 +26,7 @@ AC_PROG_LIBTOOL
 
 GENERIC_MAJOR_VERSION=1
 GENERIC_MINOR_VERSION=1
-GENERIC_MICRO_VERSION=11
+GENERIC_MICRO_VERSION=12
 
 GENERIC_VERSION=$GENERIC_MAJOR_VERSION.$GENERIC_MINOR_VERSION.$GENERIC_MICRO_VERSION
 GENERIC_RELEASE=$GENERIC_MAJOR_VERSION.$GENERIC_MINOR_VERSION
