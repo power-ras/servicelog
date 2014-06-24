@@ -16,4 +16,4 @@
 ACLOCAL_AMFLAGS = -I m4
 
 SUBDIRS = src doc
-EXTRA_DIST = doc/servicelog.8 doc/servicelog_notify.8 doc/log_repair_action.8 doc/servicelog_manage.8 doc/Makefile
+EXTRA_DIST = bootstrap.sh doc/servicelog.8 doc/servicelog_notify.8 doc/log_repair_action.8 doc/servicelog_manage.8 doc/Makefile

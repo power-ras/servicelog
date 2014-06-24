@@ -10,15 +10,14 @@ Group:          System Environment/Base
 License:        GPLv2
 Vendor:		IBM Corp.
 URL:            http://linux-diag.sourceforge.net/servicelog
-Source0:        http://downloads.sourceforge.net/linux-diag/%{name}-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Source0:        http://downloads.sourceforge.net/linux-diag/%{name}/%{version}/%{name}-%{version}.tar.gz
 
-BuildRequires:  libservicelog-devel
-ExclusiveArch:	ppc ppc64
+BuildRequires:  libservicelog-devel libtool automake
+ExclusiveArch:	ppc ppc64 ppc64le
 
 %description
 Command-line interfaces for viewing and manipulating the contents of
-the servicelog database.  Servicelog contains entries that are useful
+the servicelog database. Servicelog contains entries that are useful
 for performing system service operations, and for providing a history
 of service operations that have been performed on the system.
 
@@ -36,6 +35,7 @@ of service operations that have been performed on the system.
 
 %prep
 %setup -q
+./bootstrap.sh
 
 %build
 %configure
