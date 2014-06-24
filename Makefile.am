@@ -13,5 +13,7 @@
 # You should have received a copy of the GNU Library General Public
 # Licence along with this program; if not, see <http://www.gnu.org/licenses/>. 
 
+ACLOCAL_AMFLAGS = -I m4
+
 SUBDIRS = src doc
 EXTRA_DIST = doc/servicelog.8 doc/servicelog_notify.8 doc/log_repair_action.8 doc/servicelog_manage.8 doc/Makefile
