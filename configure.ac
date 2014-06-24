@@ -45,14 +45,23 @@ AC_CHECK_LIB([servicelog], [servicelog_open servicelog_close])
 
 # Checks for header files.
 AC_HEADER_STDC
-AC_CHECK_HEADERS([stdlib.h string.h unistd.h])
+AC_CHECK_HEADERS([stdlib.h string.h unistd.h limits.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
 AC_TYPE_SIZE_T
+AC_C_INLINE
+AC_FUNC_FORK
+AC_FUNC_MALLOC
+AC_PROG_CXX
+AC_PROG_RANLIB
+AC_TYPE_PID_T
+AC_TYPE_SSIZE_T
+AC_TYPE_UINT32_T
+AC_TYPE_UINT64_T
 
 # Checks for library functions.
-AC_CHECK_FUNCS([memset strtol])
+AC_CHECK_FUNCS([memset strtol strcasecmp strchr strdup strerror strrchr strstr strtoul])
 
 AC_CONFIG_FILES([Makefile src/Makefile doc/Makefile servicelog.spec])
 AC_OUTPUT
