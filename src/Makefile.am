@@ -1,5 +1,5 @@
 AM_CFLAGS = -Wall 
-AM_LDFLAGS = -lservicelog -lrtas -lrtasevent -lsqlite3
+AM_LDFLAGS = -lservicelog -lsqlite3
 
 bin_PROGRAMS = servicelog servicelog_notify log_repair_action \
 	servicelog_manage v1_servicelog v29_servicelog
