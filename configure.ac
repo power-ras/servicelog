@@ -1,44 +1,23 @@
-# Copyright (C) 2008, 2011 IBM
-#
-# This program is free software; you can redistribute it and/or
-# modify it under the terms of the GNU Library General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Library General Public License for more details.
-#
-# You should have received a copy of the GNU Library General Public
-# Licence along with this program; if not, see <http://www.gnu.org/licenses/>. 
-
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-AC_PREREQ(2.59)
-AC_INIT([servicelog],[1.1.12],[hegdevasant@in.ibm.com, arunabal@in.ibm.com])
+m4_define([ppu_version], 1.1.12)
+
+AC_PREREQ([2.69])
+AC_INIT([servicelog], ppu_version, [hegdevasant@in.ibm.com, arunabal@in.ibm.com])
+AC_CONFIG_AUX_DIR([config])
+AC_CONFIG_MACRO_DIR([m4])
+AM_INIT_AUTOMAKE([-Wall subdir-objects -Werror foreign])
 AC_CONFIG_SRCDIR([src/servicelog.c])
 AC_CONFIG_SRCDIR([man/servicelog.8])
-AC_CONFIG_HEADER([src/config.h])
+AC_CONFIG_HEADERS([config/config.h])
 AM_INIT_AUTOMAKE
-AC_PROG_LIBTOOL
-AC_CONFIG_MACRO_DIR([m4])
-
-GENERIC_MAJOR_VERSION=1
-GENERIC_MINOR_VERSION=1
-GENERIC_MICRO_VERSION=12
-
-GENERIC_VERSION=$GENERIC_MAJOR_VERSION.$GENERIC_MINOR_VERSION.$GENERIC_MICRO_VERSION
-GENERIC_RELEASE=$GENERIC_MAJOR_VERSION.$GENERIC_MINOR_VERSION
-AC_SUBST(GENERIC_RELEASE)
-AC_SUBST(GENERIC_VERSION)
-
-VERSION=$GENERIC_VERSION
+LT_INIT
 
 # Checks for programs.
 AC_PROG_CC
 AC_PROG_INSTALL
+AM_PROG_CC_C_O
 
 # Checks for libraries.
 AC_CHECK_LIB([servicelog], [servicelog_open servicelog_close])
@@ -54,7 +33,6 @@ AC_C_INLINE
 AC_FUNC_FORK
 AC_FUNC_MALLOC
 AC_PROG_CXX
-AC_PROG_RANLIB
 AC_TYPE_PID_T
 AC_TYPE_SSIZE_T
 AC_TYPE_UINT32_T

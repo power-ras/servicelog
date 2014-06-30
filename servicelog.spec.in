@@ -1,5 +1,5 @@
 %define name servicelog
-%define version @VERSION@
+%define version @PACKAGE_VERSION@
 
 Name:           %{name}
 Version:        %{version}
@@ -23,7 +23,7 @@ of service operations that have been performed on the system.
 
 %files
 %defattr(744,root,root,-)
-%doc COPYING
+%doc COPYING README
 %{_bindir}/servicelog
 %{_bindir}/v1_servicelog
 %{_bindir}/v29_servicelog
