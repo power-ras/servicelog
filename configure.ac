@@ -19,7 +19,7 @@
 AC_PREREQ(2.59)
 AC_INIT([servicelog],[1.1.12],[hegdevasant@in.ibm.com, arunabal@in.ibm.com])
 AC_CONFIG_SRCDIR([src/servicelog.c])
-AC_CONFIG_SRCDIR([doc/servicelog.8])
+AC_CONFIG_SRCDIR([man/servicelog.8])
 AC_CONFIG_HEADER([src/config.h])
 AM_INIT_AUTOMAKE
 AC_PROG_LIBTOOL
@@ -63,5 +63,5 @@ AC_TYPE_UINT64_T
 # Checks for library functions.
 AC_CHECK_FUNCS([memset strtol strcasecmp strchr strdup strerror strrchr strstr strtoul])
 
-AC_CONFIG_FILES([Makefile src/Makefile doc/Makefile servicelog.spec])
+AC_CONFIG_FILES([Makefile src/Makefile man/Makefile servicelog.spec])
 AC_OUTPUT
