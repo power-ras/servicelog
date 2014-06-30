@@ -63,5 +63,5 @@ AC_TYPE_UINT64_T
 # Checks for library functions.
 AC_CHECK_FUNCS([memset strtol strcasecmp strchr strdup strerror strrchr strstr strtoul])
 
-AC_CONFIG_FILES([Makefile src/Makefile man/Makefile servicelog.spec])
+AC_CONFIG_FILES([Makefile servicelog.spec])
 AC_OUTPUT
