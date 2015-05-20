@@ -176,7 +176,7 @@ main(int argc, char *argv[])
 	 * All this needs to be revisited.
 	 */
 	char type_match[1024], *type_tmp = NULL;
-	char *next = type_match;
+	char *next = type_match, *end = next + sizeof(type_match) - 1;
 	int notify_flag = 0;
 	uint64_t id=0;
 	char *command=NULL, *match=NULL, query[256], cmdbuf[256];
@@ -408,16 +408,19 @@ main(int argc, char *argv[])
 	/* Added for v0.2.9 backwards compatibility */
 	// Build a match string out of the provided params
 	if (tSev) {
-		next += sprintf(next,"%s severity>=%s", connector, tSev);
+		next += snprintf(next, (end - next),
+			"%s severity>=%s", connector, tSev);
 		connector = " and ";
 	}
 
 	if (servicable) {
 		if (servicable == SL_QUERY_NO) {
-			next += sprintf(next,"%s serviceable=0", connector);
+			next += snprintf(next, (end - next),
+			"%s serviceable=0", connector);
 			connector = " and ";
 		} else if (servicable == SL_QUERY_YES) {
-			next += sprintf(next,"%s serviceable=1", connector);
+			next += snprintf(next, (end - next),
+			"%s serviceable=1", connector);
 			connector = " and ";
 		}
 	}
