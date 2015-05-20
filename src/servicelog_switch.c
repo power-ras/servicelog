@@ -96,10 +96,12 @@ set_up_commands(void)
 		exit(2);
 	}
 	last_slash[1] = '\0';
-	(void) strcpy(v1_cmd, self_dir);
-	(void) strcat(v1_cmd, "v1_servicelog");
-	(void) strcpy(v29_cmd, self_dir);
-	(void) strcat(v29_cmd, "v29_servicelog");
+	(void) strncpy(v1_cmd, self_dir, PATH_MAX - 1);
+	(void) strncat(v1_cmd, "v1_servicelog",
+		       (PATH_MAX - strlen(v1_cmd) - 1 ));
+	(void) strncpy(v29_cmd, self_dir, PATH_MAX - 1);
+	(void) strncat(v29_cmd, "v29_servicelog",
+		       (PATH_MAX - strlen(v29_cmd) - 1));
 }
 
 static void
