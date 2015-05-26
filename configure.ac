@@ -4,7 +4,7 @@
 m4_define([ppu_version], 1.1.13)
 
 AC_PREREQ([2.69])
-AC_INIT([servicelog], ppu_version, [hegdevasant@in.ibm.com, arunabal@in.ibm.com])
+AC_INIT([servicelog], ppu_version, [hegdevasant@in.ibm.com, kamaleshb@in.ibm.com])
 AC_CONFIG_AUX_DIR([config])
 AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE([-Wall subdir-objects -Werror foreign])
