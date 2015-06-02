@@ -454,8 +454,13 @@ main(int argc, char *argv[])
 			/* Must register two events, since in v1 EVENT and REPAIR cannot be done with 1 DB entry */
 			/* set up an sl_notify struct and call servicelog_notify_log */
 			if (notify_flag & TYPE_EVENTS) {
-				notify = (struct sl_notify *)malloc(sizeof(struct sl_notify));
-				memset(notify, 0, sizeof(struct sl_notify));
+				notify = calloc(1, sizeof(struct sl_notify));
+				if (!notify) {
+					fprintf(stderr, "malloc failed, while"
+					" allocating notify.\n\n");
+					rc = 1;
+					goto err_out;
+				} /* calloc */
 				notify->notify = SL_NOTIFY_EVENTS;
 				notify->method = method;
 
@@ -485,8 +490,13 @@ main(int argc, char *argv[])
 
 			if (notify_flag & TYPE_REPAIRS) {
 				/* set up an sl_notify struct and call servicelog_notify_log */
-				notify = (struct sl_notify *)malloc(sizeof(struct sl_notify));
-				memset(notify, 0, sizeof(struct sl_notify));
+				notify = calloc(1, sizeof(struct sl_notify));
+				if (!notify) {
+					fprintf(stderr, "malloc failed, while"
+					" allocating notify.\n\n");
+					rc = 1;
+					goto err_out;
+				} /* calloc */
 				notify->notify = SL_NOTIFY_REPAIRS;
 				notify->method = method;
 
