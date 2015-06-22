@@ -25,6 +25,7 @@
 #include <string.h>
 #define _GNU_SOURCE
 #include <getopt.h>
+#include <inttypes.h>
 #include <servicelog-1/servicelog.h>
 #include "config.h"
 #include "platform.h"
@@ -246,7 +247,7 @@ main(int argc, char *argv[])
 				check_event(e, &n_bmc_o, &n_bmc_c, &n_bmc_i);
 				break;
 			default:
-				fprintf(stderr, "Event %llu has unknown type "
+				fprintf(stderr, "Event ""%" PRIu64 "has unknown type "
 					"%d\n", e->id, e->type);
 			}
 

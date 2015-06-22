@@ -26,6 +26,7 @@
 #include <getopt.h>
 #include <time.h>
 #include <unistd.h>
+#include <inttypes.h>
 #include <servicelog-1/servicelog.h>
 #include "config.h"
 #include "platform.h"
@@ -228,7 +229,7 @@ main(int argc, char *argv[])
 	rc = servicelog_repair_log(servlog, ra, &id, &events);
 	if (rc == 0) {
 		if (!quiet) {
-			fprintf(stdout, "%s: servicelog record ID = %llu.\n",
+			fprintf(stdout, "%s: servicelog record ID =""%" PRIu64 ".\n",
 				argv[0], id);
 			fprintf(stdout, "\nThe following events were "
 				"repaired:\n\n");

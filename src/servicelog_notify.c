@@ -27,6 +27,7 @@
 #define _GNU_SOURCE
 #include <getopt.h>
 #include <sys/stat.h>
+#include <inttypes.h>
 #include <servicelog-1/servicelog.h>
 #include "config.h"
 #include "platform.h"
@@ -482,7 +483,7 @@ main(int argc, char *argv[])
 				rc = servicelog_notify_log(servlog, notify, &id);
 				servicelog_notify_free(notify);
 				if (rc == 0) {
-					printf("Event Notification Registration successful (id: %llu)\n", id);
+					printf("Event Notification Registration successful (id: ""%" PRIu64 ")\n", id);
 				}
 				else {
 					fprintf(stderr, "%s\n", servicelog_error(servlog));
@@ -522,7 +523,7 @@ main(int argc, char *argv[])
 				rc = servicelog_notify_log(servlog, notify, &id);
 				servicelog_notify_free(notify);
 				if (rc == 0) {
-					printf("Repair Notification Registration successful (id: %llu)\n", id);
+					printf("Repair Notification Registration successful (id: ""%" PRIu64 ")\n", id);
 				}
 				else {
 					fprintf(stderr, "%s\n", servicelog_error(servlog));
@@ -562,7 +563,7 @@ main(int argc, char *argv[])
 				} else if (notify == NULL) {
 					fprintf(stderr, "Could not find a registered "
 						"notification tool with the specified "
-						"id (%llu).\n", id);
+						"id (""%" PRIu64 ").\n", id);
 					rc = 1;
 					goto err_out;
 				}
@@ -624,7 +625,7 @@ main(int argc, char *argv[])
 			} else if (notify == NULL) {
 				fprintf(stderr, "Could not find a registered "
 					"notification tool with the specified "
-					"id (%llu).\n", id);
+					"id (""%" PRIu64 ").\n", id);
 				rc = 1;
 				goto err_out;
 			}

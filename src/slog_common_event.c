@@ -25,6 +25,7 @@
 #include <string.h>
 #include <time.h>
 #include <getopt.h>
+#include <inttypes.h>
 #include <servicelog-1/servicelog.h>
 #include "config.h"
 #include "platform.h"
@@ -224,7 +225,7 @@ main(int argc, char **argv) {
 	}
 
 	if (verbose) {
-		printf("Logged event number %llu\n", event_id);
+		printf("Logged event number ""%" PRIu64 "\n", event_id);
 	}
 
 	servicelog_close(slog);
