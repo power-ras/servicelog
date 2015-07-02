@@ -221,7 +221,7 @@ main(int argc, char *argv[])
 	if (rc != 0) {
 		if (!quiet)
 			fprintf(stderr, "%s: Could not open servicelog "
-				"databse to log the repair action.\n%s\n",
+				"database to log the repair action.\n%s\n",
 				argv[0], servicelog_error(servlog));
 		return 2;
 	}
