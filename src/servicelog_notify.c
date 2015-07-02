@@ -504,7 +504,7 @@ main(int argc, char *argv[])
 				notify->notify = SL_NOTIFY_REPAIRS;
 				notify->method = method;
 
-				/* A v1 command line arg will take precidence */
+				/* A v1 command line arg will take precedence */
 				if (match)
 					notify->match = strdup(match);
 				else
@@ -599,7 +599,7 @@ main(int argc, char *argv[])
 				}
 			}
 
-			/* diplay the notification tools */
+			/* display the notification tools */
 			servicelog_notify_print(stdout, notify, 2);
 			servicelog_notify_free(notify);
 		break;
