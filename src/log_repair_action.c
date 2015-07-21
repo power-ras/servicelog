@@ -27,6 +27,10 @@
 #include <time.h>
 #include <unistd.h>
 #include <inttypes.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/wait.h>
+#include <fcntl.h>
 #include <servicelog-1/servicelog.h>
 #include "config.h"
 #include "platform.h"
@@ -87,10 +91,9 @@ print_usage(char *command) {
 int
 main(int argc, char *argv[])
 {
-	FILE *fp;
-	int option_index, rc, quiet=0;
+	int option_index, quiet=0;
 	char *date = NULL, *dummy;
-	char cmd[BUF_SIZE], buf[BUF_SIZE];
+	char buf[BUF_SIZE], tmp_system_arg[(BUF_SIZE/2)];
 	uint64_t id;
 	struct servicelog *servlog;
 	struct sl_repair_action repair_action, *ra = &repair_action;
@@ -98,6 +101,10 @@ main(int argc, char *argv[])
 	time_t epoch;
 	int api_version = 0;  // Short for version 0.2.9
 	int platform = 0;
+	pid_t cpid;	/* Pid of child		*/
+	int rc;		/* Holds return value	*/
+	int status;	/* exit value of child	*/
+	int pipefd[2];	/* pipe file descriptor	*/
 
 	platform = get_platform();
 	switch (platform) {
@@ -109,6 +116,8 @@ main(int argc, char *argv[])
 	}
 
 	memset(ra, 0, sizeof(*ra));
+	memset(buf, 0, BUF_SIZE);
+	memset(tmp_system_arg, 0, (BUF_SIZE/2));
 
 	for (;;) {
 		option_index = 0;
@@ -179,29 +188,122 @@ main(int argc, char *argv[])
 	}
 
 	if (date) {
-		/* convert the date argument to a time_t */
-		snprintf(cmd, BUF_SIZE, "/bin/date --date=\"%s\" +%%s", date);
+		/* Create a pipe */
+		if (pipe(pipefd) == -1) {
+			if (!quiet) {
+				fprintf(stderr, "%s: Pipe creation failed at %s,%d\n",
+					argv[0], __func__, __LINE__);
+			}
+			exit(1);
+		}/* pipe */
 
-		if ((fp = popen(cmd, "r")) == NULL) {
-			fprintf(stderr, "%s: Could not run /bin/date\n",
-				argv[0]);
-			return 1;
-		}
+		/* fork/exec */
+		cpid = fork();
+		if (cpid == -1) {
+			if (!quiet) {
+				fprintf(stderr, "%s: Forking Failed at: %s,%d\n",
+					argv[0], __func__, __LINE__);
+			}
+			close(pipefd[0]);
+			close(pipefd[1]);
+			exit(1);
+		} /* fork */
 
-		rc = fread(buf, 1, BUF_SIZE, fp);
-		buf[rc-1] = '\0';
-		rc = pclose(fp);
+		if (cpid == 0) {
+			char *system_arg[5] = {NULL,};	/* execv argument list */
+			int re_fd;			/* redirects stderr to /dev/null */
 
-		if ((epoch = strtol(buf, NULL, 0)) == 0) {
-			if (!quiet)
-				fprintf(stderr, "%s: %s\n", argv[0], buf);
-			return 1;
-		}
+			/* Redirect stdout to pipe */
+			if (dup2(pipefd[1], STDOUT_FILENO) == -1) {
+				if (!quiet) {
+					fprintf(stderr, "%s: closing stdout failed at %s,%d\n",
+						argv[0], __func__, __LINE__);
+				}
+				close(pipefd[0]);
+				close(pipefd[1]);
+				exit(1);
+			} /* dup of stdout */
+
+                        re_fd = open("/dev/null", O_WRONLY);
+                        if (re_fd == -1) {
+                                if (!quiet) {
+                                        fprintf(stderr, "%s: Failed to open /dev/null at"
+                                        " %s,%d\n", argv[0], __func__, __LINE__);
+                                }
+                                close(pipefd[0]);
+                                close(pipefd[1]);
+                                exit(1);
+                        }
+
+                        if (dup2(re_fd, STDERR_FILENO) == -1) {
+                                if (!quiet) {
+                                        fprintf(stderr, "%s: Failed to redirect "
+                                                "stderr to /dev/null at %s,%d\n",
+                                                argv[0], __func__,__LINE__);
+                                }
+				close(re_fd);
+                                close(pipefd[0]);
+                                close(pipefd[1]);
+                                exit(1);
+                        }
+
+			/* Close read end of pipe */
+			close(pipefd[0]);
+
+			system_arg[0] = "/bin/date";
+			system_arg[1] = "+\%s";
+			system_arg[2] = "--date";
+			snprintf(tmp_system_arg, (BUF_SIZE/2) -1 ,"%s",date);
+			system_arg[3] = tmp_system_arg;
+
+			/* execv */
+			execv(system_arg[0], system_arg);
+			exit(1);
+		} else {
+			/* Parent */
+			/* Close write end of pipe */
+			close(pipefd[1]);
+
+			rc = read(pipefd[0], buf, BUF_SIZE);
+			if (rc == -1) {
+				/* read failed. Either broken pipe or child terminated */
+				if (!quiet) {
+					fprintf(stderr, "%s reading from pipe failed %s,%d\n",
+						argv[0], __func__, __LINE__);
+				}
+			} else {
+				if (strlen(buf) == 0) {
+					if (!quiet) {
+						fprintf(stderr, "%s: Invalid date %s\n",
+							argv[0], date);
+					}
+					rc = -1;
+				} else if ((epoch = strtol(buf, NULL, 0)) == 0) {
+					if (!quiet) {
+						fprintf(stderr, "%s: %s\n", argv[0], buf);
+					}
+					rc = -1;
+				} /* if epoch */
+			} /* if read */
+
+			close(pipefd[0]);
+
+			/* Wait for lsvpd command to complete */
+			if (waitpid(cpid, &status, 0) == -1) {
+				if (!quiet) {
+					fprintf(stderr, "%s: wait on pid failed at "
+						"%s,%d\n", argv[0], __func__, __LINE__);
+				}
+			} /* if waitpid */
+
+			if (rc == -1)
+				exit(1);
+		}/* if fork */
+	} else {
+			/* use the current date */
+			epoch = time(NULL);
 	}
-	else {
-		/* use the current date */
-		epoch = time(NULL);
-	}
+
 	ra->time_repair = epoch;
 
 	if (!quiet) {
