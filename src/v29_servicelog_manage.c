@@ -234,7 +234,7 @@ main(int argc, char *argv[])
 		servicelog_event_free(events);
 
 		// Now need to query repair actions:
-		servicelog_repair_query(slog, "", &repairs);
+		rc = servicelog_repair_query(slog, "", &repairs);
 		if (rc != 0) {
 			fprintf(stderr, "%s\n", servicelog_error(slog));
 			servicelog_close(slog);
@@ -299,7 +299,7 @@ main(int argc, char *argv[])
 		servicelog_event_free(events);
 
 		// Delete repair actions as well.
-		servicelog_repair_query(slog, "", &repairs);
+		rc = servicelog_repair_query(slog, "", &repairs);
 		if (rc != 0) {
 			fprintf(stderr, "%s\n", servicelog_error(slog));
 			servicelog_close(slog);
@@ -421,7 +421,7 @@ main(int argc, char *argv[])
 		servicelog_event_free(events);
 
 		/* Delete repair actions which are older than age */
-		servicelog_repair_query(slog, "", &repairs);
+		rc = servicelog_repair_query(slog, "", &repairs);
 		if (rc != 0) {
 			fprintf(stderr, "%s\n", servicelog_error(slog));
 			servicelog_close(slog);
