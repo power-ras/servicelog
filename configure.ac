@@ -1,7 +1,7 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-m4_define([ppu_version], 1.1.13)
+m4_define([ppu_version], 1.1.14)
 
 AC_PREREQ([2.69])
 AC_INIT([servicelog], ppu_version, [hegdevasant@in.ibm.com, kamaleshb@in.ibm.com])
