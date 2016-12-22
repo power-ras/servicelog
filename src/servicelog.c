@@ -221,6 +221,11 @@ main(int argc, char *argv[])
 		printf("Servicelog Statistics:\n\n");
 
 		rc = servicelog_event_query(slog, "", &event);
+		if (rc != 0) {
+			fprintf(stderr, "%s\n", servicelog_error(slog));
+			servicelog_close(slog);
+			exit(2);
+		}
 		e = event;
 		while (e) {
 			n_events++;
@@ -298,6 +303,11 @@ main(int argc, char *argv[])
        
 
 		rc = servicelog_repair_query(slog, "", &repair);
+		if (rc != 0) {
+			fprintf(stderr, "%s\n", servicelog_error(slog));
+			servicelog_close(slog);
+			exit(2);
+		}
 		r = repair;
 		while (r) {
 			n_repair++;
@@ -307,6 +317,11 @@ main(int argc, char *argv[])
 		printf("Logged Repair Actions:         %d\n", n_repair);
 
 		rc = servicelog_notify_query(slog, "", &notify);
+		if (rc != 0) {
+			fprintf(stderr, "%s\n", servicelog_error(slog));
+			servicelog_close(slog);
+			exit(2);
+		}
 		n = notify;
 		while (n) {
 			n_notify++;
