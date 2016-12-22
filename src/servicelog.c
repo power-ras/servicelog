@@ -175,11 +175,13 @@ main(int argc, char *argv[])
 		rc = servicelog_event_query(slog, "", &event);
 		if (rc != 0) {
 			fprintf(stderr, "%s\n", servicelog_error(slog));
+			servicelog_close(slog);
 			exit(2);
 		}
 		rc = servicelog_event_print(stdout, event, 1);
 		if (rc < 0) {
 			fprintf(stderr, "%s\n", servicelog_error(slog));
+			servicelog_close(slog);
 			exit(2);
 		}
 		servicelog_event_free(event);
@@ -188,11 +190,13 @@ main(int argc, char *argv[])
 		rc = servicelog_event_query(slog, query, &event);
 		if (rc != 0) {
 			fprintf(stderr, "%s\n", servicelog_error(slog));
+			servicelog_close(slog);
 			exit(2);
 		}
 		rc = servicelog_event_print(stdout, event, 1);
 		if (rc < 0) {
 			fprintf(stderr, "%s\n", servicelog_error(slog));
+			servicelog_close(slog);
 			exit(2);
 		}
 		servicelog_event_free(event);
