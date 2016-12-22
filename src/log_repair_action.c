@@ -313,6 +313,9 @@ main(int argc, char *argv[])
 			"(y to continue, any other key to cancel): ",
 			ctime(&epoch), ra->location, ra->procedure);
 		dummy = fgets(buf, BUF_SIZE, stdin);
+		if (!dummy)
+			return 4;
+
 		if (strlen(buf) != 2 || buf[0] != 'y') {
 			printf("\nCancelled.\n");
 			return 0;

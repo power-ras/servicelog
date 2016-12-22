@@ -271,6 +271,9 @@ main(int argc, char *argv[])
 			       "from the servicelog?\n");
 			printf("Enter 'yes' to continue > ");
 			tmp = fgets(buf, 80, stdin);
+			if (!tmp)
+				exit(2);
+
 			if (strcasecmp(buf, "yes\n")) {
 				printf("Operation cancelled.\n");
 				exit(4);
@@ -330,6 +333,9 @@ main(int argc, char *argv[])
 					"notification tools from the servicelog?\n");
 			printf("Enter 'yes' to continue > ");
 			tmp = fgets(buf, 80, stdin);
+			if (!tmp)
+				exit(2);
+
 			if (strcasecmp(buf, "yes\n")) {
 				printf("Operation cancelled.\n");
 				exit(4);
@@ -378,7 +384,10 @@ main(int argc, char *argv[])
 			       " - Delete anything older than 1 year\n",
 			       age, age);
 			printf("Enter 'yes' to continue > ");
-			fgets(buf, 80, stdin);
+			tmp = fgets(buf, 80, stdin);
+			if (!tmp)
+				exit(2);
+
 			if (strcasecmp(buf, "yes\n")) {
 				printf("Operation cancelled.\n");
 				break;
