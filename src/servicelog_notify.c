@@ -155,7 +155,7 @@ int
 main(int argc, char *argv[])
 {
 	int option_index, rc, action=ACTION_UNSPECIFIED;
-	int flag_type=0, flag_cmd=0, flag_match=0, flag_id=0, flag_method=0;
+	int flag_id=0;
 	int add_flags=0, method=0, servicable = 0;
 
 	/*
@@ -254,11 +254,9 @@ main(int argc, char *argv[])
 		case 't':
 			type_tmp = optarg;
 			add_flags++;
-			flag_type = 1;
 			break;
 		case 'c':
 			command = optarg;
-			flag_cmd = 1;
 
 			/* verify command argument */
 			snprintf(cmdbuf, 256, "%s", command);
@@ -285,7 +283,6 @@ main(int argc, char *argv[])
 		case 'm':
 			match = optarg;
 			add_flags++;
-			flag_match = 1;
 			break;
 		case 'M':
 			method = valid_method_arg(optarg);
@@ -295,7 +292,6 @@ main(int argc, char *argv[])
 				exit(1);
 			}
 			add_flags++;
-			flag_method = 1;
 			break;
 		case 'h':	/* help */
 			print_usage();
