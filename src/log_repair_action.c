@@ -36,7 +36,8 @@
 #include "platform.h"
 
 #define BUF_SIZE	512
-#define ARG_LIST	"l:p:d:n:t:qvVh"
+
+#define ARG_LIST	"l:p:d:n:t:qVh"
 
 static struct option long_options[] = {
 	{"location",	required_argument, NULL, 'l'},
@@ -45,7 +46,6 @@ static struct option long_options[] = {
 	{"note",	required_argument, NULL, 'n'},
 	{"quiet",	no_argument,       NULL, 'q'},
 	{"type",	required_argument, NULL, 't'},
-//	{"api_version",	required_argument, NULL, 'v'},
 	{"help",	no_argument,       NULL, 'h'},
 	{"version",	no_argument,       NULL, 'V'},
 	{0,0,0,0}
@@ -73,8 +73,6 @@ print_usage(char *command) {
 	printf("    -t: type of event this repair action is for (v0.2.9)\n");
 	printf("	Valid types: (os, ppc64_rtas, or ppc64_encl)\n");
 	printf("    -V: print the version of the command and exit\n");
-//	printf("    -v: Version of API to use. \n");
-//	printf("	Valid arguments: '-v 1', otherwise defaults to v0.2.9)\n");
 	printf("    -h: print this help text and exit\n");
 
 	return;
@@ -99,7 +97,6 @@ main(int argc, char *argv[])
 	struct sl_repair_action repair_action, *ra = &repair_action;
 	struct sl_event *events = NULL;
 	time_t epoch;
-	int api_version = 0;  // Short for version 0.2.9
 	int platform = 0;
 	pid_t cpid;	/* Pid of child		*/
 	int rc;		/* Holds return value	*/
@@ -145,10 +142,6 @@ main(int argc, char *argv[])
 		case 'V':
 			printf("%s: Version %s\n", argv[0], VERSION);
 			exit(0);
-			break;
-		case 'v':
-			if ((strncmp(optarg, "1", 1) == 0))
-				api_version = 1;
 			break;
 		case 't':	/* type - Added for backwards v29 compatibility */
 			/* Not actually used.  Loc code is sufficient for device lookup with v1 API */
