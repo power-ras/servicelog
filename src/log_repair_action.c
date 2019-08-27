@@ -70,8 +70,7 @@ print_usage(char *command) {
 	printf("        (useful for indicating who performed the repair)\n");
 	printf("    -q: quiet mode (log the repair action without prompting\n");
 	printf("        for confirmation)\n");
-	printf("    -t: type of event this repair action is for (v0.2.9)\n");
-	printf("	Valid types: (os, ppc64_rtas, or ppc64_encl)\n");
+	printf("    -t: type of event this repair action is for (deprecated)\n");
 	printf("    -V: print the version of the command and exit\n");
 	printf("    -h: print this help text and exit\n");
 
