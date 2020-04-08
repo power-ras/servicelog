@@ -79,6 +79,7 @@ main(int argc, char **argv) {
 	servicelog *slog;
 	struct sl_event event;
 	uint64_t event_id;
+#ifndef SERVICELOG_TEST
 	int platform = 0;
 
 	platform = get_platform();
@@ -89,6 +90,7 @@ main(int argc, char **argv) {
 				argv[0], __power_platform_name(platform));
 		exit(1);
 	}
+#endif
 
 	for (;;) {
 		option_index = 0;

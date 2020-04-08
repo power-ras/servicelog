@@ -96,11 +96,12 @@ main(int argc, char *argv[])
 	struct sl_repair_action repair_action, *ra = &repair_action;
 	struct sl_event *events = NULL;
 	time_t epoch;
-	int platform = 0;
 	pid_t cpid;	/* Pid of child		*/
 	int rc;		/* Holds return value	*/
 	int status;	/* exit value of child	*/
 	int pipefd[2];	/* pipe file descriptor	*/
+#ifndef SERVICELOG_TEST
+	int platform = 0;
 
 	platform = get_platform();
 	switch (platform) {
@@ -110,6 +111,7 @@ main(int argc, char *argv[])
 					argv[0], __power_platform_name(platform));
 		exit(1);
 	}
+#endif
 
 	memset(ra, 0, sizeof(*ra));
 	memset(buf, 0, BUF_SIZE);

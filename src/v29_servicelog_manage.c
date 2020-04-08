@@ -85,24 +85,25 @@ main(int argc, char *argv[])
 	int option_index, action=ACTION_UNSPECIFIED;
 	int flag_force=0;
 	int age = 60;	/* default age for --clean */
-	int platform = 0;
 	char buf[124];
 	char *tmp;
 	char *next_char;
 	uint32_t num=0, num_repaired=0, num_unrepaired=0, num_info=0, num_ra=0;
 	uint32_t span;
 	time_t now;
-
-	cmd = argv[0];
+#ifndef SERVICELOG_TEST
+	int platform = 0;
 
 	platform = get_platform();
 	switch (platform) {
 	case PLATFORM_UNKNOWN:
 	case PLATFORM_POWERNV:
 		fprintf(stderr, "%s: is not supported on the %s platform\n",
-					cmd, __power_platform_name(platform));
+				argv[0], __power_platform_name(platform));
 		exit(1);
 	}
+#endif
+	cmd = argv[0];
 
 	if (argc <= 1) {
 		print_usage();

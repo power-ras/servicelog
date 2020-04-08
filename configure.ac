@@ -38,6 +38,20 @@ AC_TYPE_SSIZE_T
 AC_TYPE_UINT32_T
 AC_TYPE_UINT64_T
 
+AC_MSG_CHECKING([whether to enable test])
+AC_ARG_WITH([test],
+	    [AS_HELP_STRING([--with-test],
+			    [compile test binaries [default=no]])],
+			    [if test "$withval" = "yes"; then
+				AC_MSG_RESULT([yes])
+				AC_REQUIRE([AX_APPEND_COMPILE_FLAGS])
+				AX_APPEND_COMPILE_FLAGS([-DSERVICELOG_TEST])
+			     else
+				AC_MSG_RESULT([no])
+			     fi
+			    ],
+			    [AC_MSG_RESULT([no])])
+
 # Checks for library functions.
 AC_CHECK_FUNCS([memset strtol strcasecmp strchr strdup strerror strrchr strstr strtoul])
 

@@ -187,19 +187,20 @@ main(int argc, char *argv[])
 	struct stat sbuf;
 	char *tSev = NULL;
 	int tRepAct = 0;
-	int platform = 0;
 	char *connector = "";
-
-	cmd = argv[0];
+#ifndef SERVICELOG_TEST
+	int platform = 0;
 
 	platform = get_platform();
 	switch (platform) {
 	case PLATFORM_UNKNOWN:
 	case PLATFORM_POWERNV:
 		fprintf(stderr, "%s: is not supported on the %s platform\n",
-					cmd, __power_platform_name(platform));
+				argv[0], __power_platform_name(platform));
 		exit(1);
 	}
+#endif
+	cmd = argv[0];
 
 	if (argc <= 1) {
 		print_usage();
