@@ -11,7 +11,6 @@ AM_INIT_AUTOMAKE([-Wall subdir-objects -Werror foreign])
 AC_CONFIG_SRCDIR([src/servicelog.c])
 AC_CONFIG_SRCDIR([man/servicelog.8])
 AC_CONFIG_HEADERS([config/config.h])
-AM_INIT_AUTOMAKE
 LT_INIT
 
 # Checks for programs.
