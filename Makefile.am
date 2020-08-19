@@ -14,6 +14,7 @@
 # Licence along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 ACLOCAL_AMFLAGS = -I m4
+AM_CFLAGS       = -Wall
 
 man_MANS = man/servicelog.8 man/servicelog_notify.8 \
 	   man/log_repair_action.8 man/servicelog_manage.8
