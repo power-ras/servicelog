@@ -79,18 +79,6 @@ main(int argc, char **argv) {
 	servicelog *slog;
 	struct sl_event event;
 	uint64_t event_id;
-#ifndef SERVICELOG_TEST
-	int platform = 0;
-
-	platform = get_platform();
-	switch (platform) {
-	case PLATFORM_UNKNOWN:
-	case PLATFORM_POWERNV:
-		fprintf(stderr, "%s is not supported on the %s platform\n",
-				argv[0], __power_platform_name(platform));
-		exit(1);
-	}
-#endif
 
 	for (;;) {
 		option_index = 0;
@@ -138,6 +126,19 @@ main(int argc, char **argv) {
 			exit(1);
 		}
 	}
+
+#ifndef SERVICELOG_TEST
+	int platform = 0;
+
+	platform = get_platform();
+	switch (platform) {
+	case PLATFORM_UNKNOWN:
+	case PLATFORM_POWERNV:
+		fprintf(stderr, "%s is not supported on the %s platform\n",
+				argv[0], __power_platform_name(platform));
+		exit(1);
+	}
+#endif
 
 	if (e == NULL) {
 		if (verbose) {
