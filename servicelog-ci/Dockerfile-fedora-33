@@ -1,4 +1,4 @@
-FROM fedora:rawhide
+FROM fedora:33
 RUN dnf -y install gcc make valgrind strace servicelog libservicelog libservicelog-devel
 RUN dnf -y install sqlite-devel bison flex librtas-devel libtool automake rpm-build git
 COPY . /build/
