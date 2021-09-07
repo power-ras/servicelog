@@ -1,10 +1,10 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-m4_define([ppu_version], 1.1.15)
+m4_define([ppu_version], 1.1.16)
 
 AC_PREREQ([2.69])
-AC_INIT([servicelog], ppu_version, [hegdevasant@linux.ibm.com, sbhat@linux.ibm.com])
+AC_INIT([servicelog], ppu_version, [hegdevasant@linux.ibm.com])
 AC_CONFIG_AUX_DIR([config])
 AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE([-Wall subdir-objects -Werror foreign])
