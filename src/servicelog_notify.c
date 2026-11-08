@@ -408,6 +408,10 @@ main(int argc, char *argv[])
 	if (tSev) {
 		next += snprintf(next, (end - next),
 			"%s severity>=%s", connector, tSev);
+		/* if next is already moved ahead of end,
+		 * put it back at end.
+		 */
+		if (next > end) next = end;
 		connector = " and ";
 	}
 
