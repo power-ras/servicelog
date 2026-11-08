@@ -144,6 +144,25 @@ valid_method_arg(const char *arg) {
 }
 
 /**
+ * check_invalid_characters(char *c)
+ * @brief check if command "c" contains any sql escape characters
+ *
+ * @return 1 if string c containes ";", "'", or "--"; 0 otherwise
+ */
+int
+check_invalid_characters(char *c)
+{
+	size_t len = strlen(c);
+	for (int i = 0; i < len; i++) {
+		if (c[i] == ';') return 1;
+		if (c[i] == '\'') return 1;
+		if (i + 1 < len && c[i] == '-' && c[i + 1] == '-')
+			return 1;
+	}
+	return 0;
+}
+
+/**
  * main
  * @brief Parse command line args and execute diagnostics
  *
@@ -264,6 +283,11 @@ main(int argc, char *argv[])
 			next_char = strchr(cmdbuf, ' ');
 			if (next_char != NULL)
 				*next_char = '\0';
+
+			if (check_invalid_characters(cmdbuf)) {
+				fprintf(stderr, "Command '%s' has escape characters.\n", cmdbuf);
+				exit(1);
+			}
 
 			if (stat(cmdbuf, &sbuf) < 0) {
 				fprintf(stderr, "Command '%s' does not exist.\n",
