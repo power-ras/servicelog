@@ -30,6 +30,7 @@
 #include <inttypes.h>
 #include <servicelog-1/servicelog.h>
 #include "config.h"
+#include <errno.h>
 #include "platform.h"
 
 #define ACTION_TOOMANY		-1
@@ -159,6 +160,28 @@ check_invalid_characters(char *c)
 		if (i + 1 < len && c[i] == '-' && c[i + 1] == '-')
 			return 1;
 	}
+	return 0;
+}
+
+/*
+ * parse_severity - validate a user-supplied severity string
+ * @str: string from the command line (-E option)
+ *
+ * Returns 0 if @str is a whole decimal number within the valid
+ * servicelog severity range, -1 otherwise.
+ */
+static int
+parse_severity(const char *str)
+{
+	char *end;
+	long val;
+
+	errno = 0;
+	val = strtol(str, &end, 10);
+	if (errno != 0 || end == str || *end != '\0')
+		return -1;
+	if (val < SL_SEV_DEBUG || val > SL_SEV_FATAL)
+		return -1;
 	return 0;
 }
 
@@ -324,6 +347,14 @@ main(int argc, char *argv[])
 			break;
 		case'E':
 			tSev = optarg;
+			if (parse_severity(optarg) != 0) {
+				fprintf(stderr,
+					"%s: invalid severity '%s' for -E "
+					"(expected an integer from %d to %d)\n",
+					argv[0], optarg,
+					SL_SEV_DEBUG, SL_SEV_FATAL);
+				exit(EXIT_FAILURE);
+			}
 			add_flags++;
 			break;
 		case'R':
