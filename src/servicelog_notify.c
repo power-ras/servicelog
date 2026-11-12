@@ -182,7 +182,7 @@ main(int argc, char *argv[])
 	uint64_t id=0;
 	char *command=NULL, *match=NULL, query[256], cmdbuf[256];
 	char *next_char;
-	struct servicelog *servlog;
+	struct servicelog *servlog = NULL;
 	struct sl_notify *notify, *current;
 	struct stat sbuf;
 	char *tSev = NULL;
@@ -206,8 +206,6 @@ main(int argc, char *argv[])
 		print_usage();
 		exit(0);
 	}
-
-	memset(&servlog, 0, sizeof(servlog));
 
 	for (;;) {
 		option_index = 0;
