@@ -30,6 +30,7 @@
 #include <inttypes.h>
 #include <servicelog-1/servicelog.h>
 #include "config.h"
+#include <errno.h>
 #include "platform.h"
 
 #define ACTION_TOOMANY		-1
@@ -141,6 +142,47 @@ valid_method_arg(const char *arg) {
 		return SL_METHOD_SIMPLE_VIA_STDIN;
 
 	return -1;
+}
+
+/**
+ * check_invalid_characters(char *c)
+ * @brief check if command "c" contains any sql escape characters
+ *
+ * @return 1 if string c containes ";", "'", or "--"; 0 otherwise
+ */
+int
+check_invalid_characters(char *c)
+{
+	size_t len = strlen(c);
+	for (int i = 0; i < len; i++) {
+		if (c[i] == ';') return 1;
+		if (c[i] == '\'') return 1;
+		if (i + 1 < len && c[i] == '-' && c[i + 1] == '-')
+			return 1;
+	}
+	return 0;
+}
+
+/*
+ * parse_severity - validate a user-supplied severity string
+ * @str: string from the command line (-E option)
+ *
+ * Returns 0 if @str is a whole decimal number within the valid
+ * servicelog severity range, -1 otherwise.
+ */
+static int
+parse_severity(const char *str)
+{
+	char *end;
+	long val;
+
+	errno = 0;
+	val = strtol(str, &end, 10);
+	if (errno != 0 || end == str || *end != '\0')
+		return -1;
+	if (val < SL_SEV_DEBUG || val > SL_SEV_FATAL)
+		return -1;
+	return 0;
 }
 
 /**
@@ -265,6 +307,11 @@ main(int argc, char *argv[])
 			if (next_char != NULL)
 				*next_char = '\0';
 
+			if (check_invalid_characters(cmdbuf)) {
+				fprintf(stderr, "Command '%s' has escape characters.\n", cmdbuf);
+				exit(1);
+			}
+
 			if (stat(cmdbuf, &sbuf) < 0) {
 				fprintf(stderr, "Command '%s' does not exist.\n",
 					cmdbuf);
@@ -300,6 +347,14 @@ main(int argc, char *argv[])
 			break;
 		case'E':
 			tSev = optarg;
+			if (parse_severity(optarg) != 0) {
+				fprintf(stderr,
+					"%s: invalid severity '%s' for -E "
+					"(expected an integer from %d to %d)\n",
+					argv[0], optarg,
+					SL_SEV_DEBUG, SL_SEV_FATAL);
+				exit(EXIT_FAILURE);
+			}
 			add_flags++;
 			break;
 		case'R':
@@ -408,6 +463,10 @@ main(int argc, char *argv[])
 	if (tSev) {
 		next += snprintf(next, (end - next),
 			"%s severity>=%s", connector, tSev);
+		/* if next is already moved ahead of end,
+		 * put it back at end.
+		 */
+		if (next > end) next = end;
 		connector = " and ";
 	}
 
