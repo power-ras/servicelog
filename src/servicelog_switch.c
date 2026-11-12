@@ -71,6 +71,21 @@ setup_failed(const char *why)
 }
 
 /*
+ * Build "<dir><name>" into dst (a PATH_MAX-sized buffer), failing
+ * the setup if the result doesn't fit.
+ */
+static void
+build_cmd_path(char *dst, const char *dir, const char *name)
+{
+	int len = snprintf(dst, PATH_MAX, "%s%s", dir, name);
+
+	if (len < 0 || len >= PATH_MAX) {
+		setup_failed("command pathname too long");
+		exit(2);
+	}
+}
+
+/*
  * Set up the pathnames for the v0.2.9 and v1+ executables.  Wherever
  * they are, they should be in the same directory as this one, whose
  * pathname is referenced by the /proc/self/exe symlink.
@@ -82,28 +97,30 @@ set_up_commands(void)
 	ssize_t pathlen;
 	char *last_slash;
 
-	pathlen = readlink("/proc/self/exe", self_dir, PATH_MAX);
-	/* Leave room because "v29_servicelog" is longer than "servicelog". */
-	if (pathlen < 0 || pathlen > PATH_MAX-10) {
+	/* Reserve a byte for the NUL, since readlink doesn't add one. */
+	pathlen = readlink("/proc/self/exe", self_dir, sizeof(self_dir) - 1);
+	if (pathlen < 0) {
 		setup_failed("readlink of /proc/self/exe failed");
 		perror("/proc/self/exe");
 		exit(2);
 	}
-	self_dir[pathlen] = '\0';	/* since readlink doesn't provide it */
+	if (pathlen >= (ssize_t)sizeof(self_dir) - 1) {
+		/* Filled the buffer, so the result may have been truncated. */
+		setup_failed("pathname of /proc/self/exe too long");
+		exit(2);
+	}
+	self_dir[pathlen] = '\0';
+
+	/* Keep the directory part, including the trailing '/'. */
 	last_slash = strrchr(self_dir, '/');
 	if (!last_slash) {
 		setup_failed("pathname lacks /");
 		exit(2);
 	}
-	pathlen -= (strlen(last_slash) - 1); /* account for trailing / */
 	last_slash[1] = '\0';
 
-	(void) strncpy(v1_cmd, self_dir, PATH_MAX - 1);
-	v1_cmd[pathlen] = '\0';
-	(void) strncat(v1_cmd, "v1_servicelog", (PATH_MAX - pathlen - 1 ));
-	(void) strncpy(v29_cmd, self_dir, PATH_MAX - 1);
-	v29_cmd[pathlen] = '\0';
-	(void) strncat(v29_cmd, "v29_servicelog", (PATH_MAX - pathlen - 1));
+	build_cmd_path(v1_cmd,  self_dir, "v1_servicelog");
+	build_cmd_path(v29_cmd, self_dir, "v29_servicelog");
 }
 
 static void
